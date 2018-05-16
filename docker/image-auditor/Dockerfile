@@ -1,4 +1,9 @@
 FROM node:9-alpine
-ADD src /opt/app/
-RUN ["npm","install"]
-CMD ["node", "/opt/app/auditor.js"]
+EXPOSE 2205
+COPY src /opt/app/
+
+WORKDIR /opt/app/
+RUN npm init -y
+RUN npm install --save uuid
+RUN npm install --save moment
+ENTRYPOINT ["node", "/opt/app/auditor.js"]

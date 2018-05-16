@@ -20,7 +20,7 @@ setInterval(function(){
 	var socket = dgram.createSocket('udp4');
 	var message = JSON.stringify({
 		uuid: uuid,
-		song:songs[instrument]
+		instrument:songs[instrument]
 	});
 	
 	socket.send(message, 0, message.length, 2206, '127.0.0.1', function(error, bytes){
