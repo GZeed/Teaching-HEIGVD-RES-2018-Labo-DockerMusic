@@ -1,4 +1,4 @@
-var instruments  = {
+/*var instruments  = {
     "ti-ta-ti": "piano",
     "pouet":    "trumpet",
     "trulu":    "flute",
@@ -16,7 +16,7 @@ setInterval(function(){
 	var nouveauMusicien = {};
 	var dateNow = new Date();
 	for(var m in musiciens){
-		if(musiciens[m].activeSince.getTime() / 1000 > dateNow.getTime()/1000){
+		if( musiciens[m].activeSince.getTime() / 1000 > dateNow.getTime()/1000){
 			nouveauMusicien[m] = musiciens[m];
 		}	
 	}
@@ -56,4 +56,4 @@ var tcpServer = net.createServer(function(socket){
     socket.destroy();
 });
 
-tcpServer.listen(TCP_SERVER_PORT, HOST);
+tcpServer.listen(TCP_SERVER_PORT, HOST);*/
