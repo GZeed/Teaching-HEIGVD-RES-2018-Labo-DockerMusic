@@ -68,7 +68,7 @@ udpServer.on('message',function(message){
 
 udpServer.bind({port: UDP_SERVER_PORT, address: HOST});
 
-//TCP SERVER respond to client
+//TCP SERVER 
 var tcpServer = net.createServer(function(socket){
     var response = [];
 	
