@@ -3,7 +3,6 @@ var HOST ='0.0.0.0'; //'127.0.0.1';//'0.0.0.0'
 var UDP_SERVER_PORT = 2206;
 var TCP_SERVER_PORT = 2205;
 
-var util = require('util')
 var dgram = require('dgram');
 var net = require('net');
 
@@ -66,7 +65,11 @@ udpServer.on('message',function(message){
 	console.log('udp taille tablau' + musiciens.size);*/
 });
 
-udpServer.bind({port: UDP_SERVER_PORT, address: HOST});
+var UDP_HOST = '229.1.1.69';
+udpServer.bind(UDP_SERVER_PORT,  HOST, function() {
+    console.log("Joining multicast on" + UDP_HOST);
+    udpServer.addMembership(UDP_HOST);
+});
 
 //TCP SERVER 
 var tcpServer = net.createServer(function(socket){
@@ -76,8 +79,10 @@ var tcpServer = net.createServer(function(socket){
 		console.log('ajout dans le tablau reponse  ' + value.uuid);
 		response.push(value);
 	});
-		
-    socket.write(JSON.stringify(response));
+    var jsonResponse = JSON.stringify(response);
+	console.log(jsonResponse);
+    socket.write(jsonResponse);
+	console.log('response at request' + jsonResponse);
     socket.destroy();
 });
 
