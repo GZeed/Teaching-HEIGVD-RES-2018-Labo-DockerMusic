@@ -19,7 +19,7 @@ function Musician(uuid, sound) {
     this.sound = sound;
 }
 var instrument = process.argv[2];
-var musician = new Musician(uuid,sounds[instrument]);
+var musician = new Musician(uuid(),sounds[instrument]);
 
 //finction send a song all seconds
 setInterval(function(){
