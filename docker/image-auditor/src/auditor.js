@@ -1,4 +1,4 @@
-/*var instruments  = {
+var instruments  = {
     "ti-ta-ti": "piano",
     "pouet":    "trumpet",
     "trulu":    "flute",
@@ -39,7 +39,7 @@ udpServer.on('message',function(message){
 	musiciens[jon.uuid] = {
 		activeSince : new Date(),
 		uuid : jon.uuid,
-		instrument : instruments[jon.instrument]
+		songs : instruments[jon.instrument]
 	};
 });
 
