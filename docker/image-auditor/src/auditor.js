@@ -33,7 +33,7 @@ function clearMusiciens(){
 	console.log('clearMusiciens::nuber of musiciens zize::' + musiciens.size);
 	var dateNow = moment(new Date());
 	musiciens.forEach(function(value, key){
-		if(value.activeSince.diff(dateNow,'seconds') > 5){
+		if(moment().diff(value.activeSince,'seconds') >= 5){
 			console.log('clearMusiciens::supression of::' + value);
 			musiciens.delete(key);
 		}
@@ -70,7 +70,7 @@ udpServer.bind(UDP_SERVER_PORT,  UDP_HOST, function() {
 //TCP SERVER 
 var tcpServer = net.createServer(function(socket){	
 	clearMusiciens();
-    
+    console.log('TCP_SERVER::musiciens size::' + musiciens.size,'\t');
 	console.log('TCP_SERVER::Respons::' + JSON.stringify(musiciens),'\t');
 	socket.write(JSON.stringify(musiciens));
     socket.destroy();
