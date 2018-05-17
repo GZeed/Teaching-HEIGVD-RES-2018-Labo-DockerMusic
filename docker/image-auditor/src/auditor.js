@@ -70,6 +70,8 @@ udpServer.bind(UDP_SERVER_PORT, UDP_HOST, function() {
     udpServer.addMembership(UDP_HOST);
 });
 
+var listMusiciens;
+
 //TCP SERVER 
 var tcpServer = net.createServer(function(socket) {
 
