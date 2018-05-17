@@ -1,10 +1,16 @@
 //Classe, require and configuration
-var HOST ='0.0.0.0'; //'127.0.0.1';//'0.0.0.0'
-var UDP_SERVER_PORT = 2206;
-var TCP_SERVER_PORT = 2205;
-
 var dgram = require('dgram');
 var net = require('net');
+var moment = require('moment');
+
+var TCP_HOST ='0.0.0.0'; //'127.0.0.1';//'0.0.0.0'
+var UDP_HOST = '229.1.1.69';
+
+var UDP_SERVER_PORT = 4000;
+var TCP_SERVER_PORT = 2205;
+
+
+var udpServer = dgram.createSocket('udp4');
 
 var instruments = {
     'ti-ta-ti': "piano",
@@ -14,76 +20,60 @@ var instruments = {
     'boum-boum': "drum"
 };
 
-class Musician {
-  constructor(uuid, instrument, sound, activeSince) {
-    this.uuid = uuid;
-    this.instrument = instrument;
-	this.sound = sound;
-	this.activeSince = activeSince;
-  }
-}
+function Musician(activeSince) {
+    this.uuid;
+    this.instrument;
+    this.activeSince = activeSince;
+};
 
 var musiciens = new Map();
 
 //Routine server task and logic
-setInterval(function(){
-	console.log('taille du tableau at traiter' + musiciens.size);
-	var dateNow = new Date();
+function clearMusiciens(){
+	console.log('clearMusiciens::nuber of musiciens zize::' + musiciens.size);
+	var dateNow = moment(new Date());
 	musiciens.forEach(function(value, key){
-		console.log('controle de ' + value.uuid);
-		if(value.activeSince.getTime() / 1000  + 5 < dateNow.getTime()/1000){
-			console.log('supression de ' + value);
+		if(value.activeSince.diff(dateNow,'seconds') > 5){
+			console.log('clearMusiciens::supression of::' + value);
 			musiciens.delete(key);
 		}
 	});
-
 	console.log(musiciens.size);
 	
-},5000)
+}
 
 
 
 //UDP Server recieve message from musiciens
-var udpServer = dgram.createSocket('udp4');
+
 
 udpServer.on('listening', function() {
     console.log("UDP server started and listening");
 });
 
-udpServer.on('message',function(message){
-	var musicienListened = JSON.parse(message);
-	musicienListened.song = instruments[musicienListened.instrument];
-	musicienListened.activeSince = new Date(); 
-	
-	
-	musiciens.set(musicienListened.uuid, musicienListened);
-	//debut info
-	/*console.log(musiciens.get(musicienListened.uuid));*/
-	/*musiciens.set(musicienListened.uuid,  new Musician(musicienListened.uuid, musicienListened.instrument, instruments[musicienListened.instrument], new Date().getTime()));
-	console.log('Recieved UDP and parsed' + musiciens[musicienListened.uuid].uuid + " "
-	+ musiciens[musicienListened.uuid].instrument + " " + musiciens[musicienListened.uuid].sound + " " /*+ musiciens[musicienListened.uuid].activeSince.getTime().toString()*//*);
-	console.log('udp taille tablau' + musiciens.size);*/
+
+udpServer.on('message', function(message) {
+    console.log("UDP::Received: " + message);
+    var musicienListened = new Musician(moment(new Date()));
+    var tmp = JSON.parse(message);
+    musicienListened.uuid = tmp.uuid;
+    musicienListened.instrument = instruments[tmp.sound];
+	console.log('UDP::recived::musiciens set musicienListened::' +  JSON.stringify(musicienListened));
+    musiciens.set(musicienListened.uuid, musicienListened);
 });
 
-var UDP_HOST = '229.1.1.69';
-udpServer.bind(UDP_SERVER_PORT,  HOST, function() {
-    console.log("Joining multicast on" + UDP_HOST);
+udpServer.bind(UDP_SERVER_PORT,  UDP_HOST, function() {
+    console.log("UDP::multicast on::" + UDP_HOST);
     udpServer.addMembership(UDP_HOST);
 });
 
 //TCP SERVER 
-var tcpServer = net.createServer(function(socket){
-    var response = [];
-	
-	musiciens.forEach(function(value, key){
-		console.log('ajout dans le tablau reponse  ' + value.uuid);
-		response.push(value);
-	});
-    var jsonResponse = JSON.stringify(response);
-	console.log(jsonResponse);
-    socket.write(jsonResponse);
-	console.log('response at request' + jsonResponse);
+var tcpServer = net.createServer(function(socket){	
+	clearMusiciens();
+    
+	console.log('TCP_SERVER::Respons::' + JSON.stringify(musiciens),'\t');
+	socket.write(JSON.stringify(musiciens));
     socket.destroy();
 });
 
-tcpServer.listen(TCP_SERVER_PORT, HOST);
+tcpServer.listen(TCP_SERVER_PORT, TCP_HOST);
