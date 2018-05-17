@@ -17,9 +17,8 @@ class Musician {
 	this.sound = sound;
   }
 }
-  console.log('sdf');
 
-var HOST = '229.1.1.69';
+var HOST = '127.0.0.1';//'229.1.1.69';
 var PORT = 2206;
 var instrument = process.argv[2];
 var musician = new Musician(uuid,instrument , sounds[instrument]);
