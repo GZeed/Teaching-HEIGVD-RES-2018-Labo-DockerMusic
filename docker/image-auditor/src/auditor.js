@@ -1,5 +1,5 @@
 //Classe, require and configuration
-var HOST = '127.0.0.1';//'0.0.0.0'
+var HOST ='0.0.0.0'; //'127.0.0.1';//'0.0.0.0'
 var UDP_SERVER_PORT = 2206;
 var TCP_SERVER_PORT = 2205;
 
@@ -34,7 +34,7 @@ setInterval(function(){
 		console.log('controle de ' + value.uuid);
 		if(value.activeSince.getTime() / 1000  + 5 < dateNow.getTime()/1000){
 			console.log('supression de ' + value);
-			musiciens.delete(key)
+			musiciens.delete(key);
 		}
 	});
 
@@ -58,6 +58,7 @@ udpServer.on('message',function(message){
 	
 	
 	musiciens.set(musicienListened.uuid, musicienListened);
+	//debut info
 	/*console.log(musiciens.get(musicienListened.uuid));*/
 	/*musiciens.set(musicienListened.uuid,  new Musician(musicienListened.uuid, musicienListened.instrument, instruments[musicienListened.instrument], new Date().getTime()));
 	console.log('Recieved UDP and parsed' + musiciens[musicienListened.uuid].uuid + " "
@@ -68,13 +69,16 @@ udpServer.on('message',function(message){
 udpServer.bind({port: UDP_SERVER_PORT, address: HOST});
 
 //TCP SERVER respond to client
-/*var tcpServer = net.createServer(function(socket){
+var tcpServer = net.createServer(function(socket){
     var response = [];
-    for(var m in musiciens)
-        response.push(musiciens[m]);
 	
+	musiciens.forEach(function(value, key){
+		console.log('ajout dans le tablau reponse  ' + value.uuid);
+		response.push(value);
+	});
+		
     socket.write(JSON.stringify(response));
     socket.destroy();
 });
 
-tcpServer.listen(TCP_SERVER_PORT, HOST);*/
+tcpServer.listen(TCP_SERVER_PORT, HOST);
