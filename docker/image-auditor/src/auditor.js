@@ -65,7 +65,7 @@ udpServer.on('message', function(message) {
 	musiciens.set(musicienListened.uuid, musicienListened);
 });
 
-udpServer.bind(UDP_SERVER_PORT, UDP_HOST, function() {
+udpServer.bind(UDP_SERVER_PORT, function() {
     console.log("UDP::Multicast on: " + UDP_HOST);
     udpServer.addMembership(UDP_HOST);
 });

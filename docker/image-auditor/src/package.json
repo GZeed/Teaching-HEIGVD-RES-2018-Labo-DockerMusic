@@ -2,6 +2,15 @@
   "name": "auditor.js",
   "version": "0.0.1",
   "dependencies": {
-    
-  }
+    "moment": "^2.22.1",
+    "uuid": "^3.2.1"
+  },
+  "main": "auditor.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
